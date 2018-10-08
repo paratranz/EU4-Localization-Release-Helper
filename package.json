@@ -1,0 +1,17 @@
+{
+  "name": "eu4-release-helper",
+  "version": "1.0.0",
+  "description": "EU4 release helper for Chinese localization",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "BruceCzK",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "fs-extra": "^7.0.0",
+    "iconv-lite": "^0.4.24"
+  }
+}
