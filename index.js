@@ -1,6 +1,7 @@
 const path = require('path')
 const fs = require('fs-extra')
 const axios = require('axios')
+const download = require('download')
 const iconv = require('iconv-lite')
 
 const baseModName = 'eu4_chinese'
@@ -52,9 +53,8 @@ async function main() {
   console.log('Combining culture files')
   await fs.outputFile(path.join(releaseDir, supModName, 'common/cultures', '00_cultures.txt'), cultureFile())
 
-  console.log('Fetching patch file')
-  const {file, filename} = await fetchPatchZip()
-  await fs.outputFile(path.join(releaseDir, filename), file)
+  console.log('Downloading patch file')
+  await fetchPatchZip()
 
   console.log('Done')
   process.exit(0)
@@ -95,14 +95,8 @@ function cultureFile() {
 
 function fetchPatchZip() {
   return axios.get('https://api.github.com/repos/matanki-saito/eu4dll/releases/latest').then(res => {
-    const zipUrl = res.data.zipball_url
-    return axios.get(zipUrl, {
-      resonseType: 'arraybuffer'
-    }).then(r => {
-      return {
-        file: r.data,
-        filename: 'patch_' + res.data.tag_name.toLowerCase().replace('build-', '') + '.zip'
-      }
-    })
+    const zipUrl = res.data.assets[0].browser_download_url
+    const filename = 'patch_' + version + '_' + res.data.tag_name.toLowerCase().replace('build-', '') + '.zip'
+    return download(zipUrl, releaseDir, {filename})
   })
 }
